@@ -1,0 +1,17 @@
+.venv
+scripts_dockerfile
+.gitignore
+teste.txt
+scripts/*
+README.md
+__pycache__
+docker-compose.yml
+vl_prometeus/*
+redis_commander_data
+redis*
+prometheus_data/
+vl_prometeus/
+grafana_data/
+redis_data/
+redisinsight_data/
+scripts/
