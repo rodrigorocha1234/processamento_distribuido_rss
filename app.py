@@ -4,7 +4,7 @@ import time
 if __name__ == "__main__":
     print("Enviando tarefas para o Celery...")
 
-    for i in range(5):
+    for i in range(8):
         result = soma.delay(i, i * 2)
         print(f"Tarefa enviada: {i} + {i*2} | task_id={result.id}")
 
