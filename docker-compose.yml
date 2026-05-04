@@ -57,7 +57,7 @@ services:
       - "5678:5678"   # debugpy (PyCharm attach)
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    command: python tasks.py
+    command: python app.py
 
   worker:
     build:
@@ -76,7 +76,7 @@ services:
       - "5679:5678"   # debug separado do app
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    command: celery -A tasks worker --loglevel=info
+    command: celery -A tasks.celery_app worker --loglevel=info
 
   flower:
     image: mher/flower:latest
