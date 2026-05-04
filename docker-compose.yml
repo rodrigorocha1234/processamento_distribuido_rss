@@ -72,8 +72,6 @@ services:
       - DOCKER_ENV=true
     depends_on:
       - redis
-    ports:
-      - "5679:5678"   # debug separado do app
     extra_hosts:
       - "host.docker.internal:host-gateway"
     command: celery -A tasks.celery_app worker --loglevel=info
