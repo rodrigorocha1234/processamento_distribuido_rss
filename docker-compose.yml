@@ -57,7 +57,7 @@ services:
       - "5678:5678"   # debugpy (PyCharm attach)
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    command: python app.py
+#    command: python app.py
 
   worker:
     build:
