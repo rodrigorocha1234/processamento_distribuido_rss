@@ -1,11 +1,19 @@
 from typing import Protocol, TypeVar
 
-T = TypeVar("T")
-U = TypeVar("U")
+MOTOR_WEB_SCRAPING = TypeVar("MOTOR_WEB_SCRAPING")
+SAIDA = TypeVar("SAIDA", covariant=True)
 
 
-class IWebScraping(Protocol[T, U]):
+class IWebScraping(Protocol[MOTOR_WEB_SCRAPING, SAIDA]):
 
-    def obter_motor(self) -> T: ...
+    @property
+    def url(self) -> str | None:
+        ...
 
-    def obter_dados(self, dados: T) -> U: ...
+    @url.setter
+    def url(self, value: str) -> None:
+        ...
+
+    def obter_motor(self) -> MOTOR_WEB_SCRAPING: ...
+
+    def obter_dados(self, dados: MOTOR_WEB_SCRAPING) -> SAIDA: ...
