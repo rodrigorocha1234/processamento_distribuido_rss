@@ -9,7 +9,7 @@ from app.servicos.extracao_sites.web_scraping_bs4 import WebScrapingBs4
 class WebScrapingRss(WebScrapingBs4):
 
     def __init__(self):
-        super().__init__()
+        super().__init__(parser='xml')
         self.__formatado_data_entrada = "%a, %d %b %Y %H:%M:%S %z"
 
     def obter_dados(self, dados: BeautifulSoup) -> Generator[Dict[str, Any], None, None]:

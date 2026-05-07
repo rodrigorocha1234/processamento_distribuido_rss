@@ -9,9 +9,9 @@ from requests.exceptions import HTTPError, ConnectionError, ConnectTimeout, Read
 
 class WebScrapingBs4:
 
-    def __init__(self):
+    def __init__(self, parser: str):
         self._url = None
-        self._parser_html = 'xml'
+        self._parser_html = parser
 
     @property
     def url(self):
