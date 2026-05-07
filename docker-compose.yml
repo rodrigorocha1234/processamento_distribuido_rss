@@ -42,39 +42,33 @@ services:
     build:
       context: .
       dockerfile: scripts_dockerfile/celery.Dockerfile
+
     volumes:
-      - .:/app
+      - ./app:/app
+
     environment:
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis:6379/0
-      - TZ=America/Sao_Paulo
+      - REDIS_HOST=redis
       - PYTHONUNBUFFERED=1
-      - DOCKER_ENV=true
+
     depends_on:
       - redis
-    ports:
-      - "8000:8000"
-      - "5678:5678"   # debugpy (PyCharm attach)
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-#    command: python app.py
 
   worker:
     build:
       context: .
       dockerfile: scripts_dockerfile/celery.Dockerfile
+
     volumes:
-      - .:/app
+      - ./app:/app
+
     environment:
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - REDIS_HOST=redis
       - PYTHONUNBUFFERED=1
-      - DOCKER_ENV=true
+
     depends_on:
       - redis
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    command: celery -A tasks.celery_app worker --loglevel=info
+
+    command: celery -A celery_app worker --loglevel=info
 
   flower:
     image: mher/flower:latest
