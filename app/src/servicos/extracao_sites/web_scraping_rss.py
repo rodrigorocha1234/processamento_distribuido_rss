@@ -1,9 +1,9 @@
 from datetime import datetime
-from typing import Dict, Generator, Any
+from typing import Generator
 
 from bs4 import BeautifulSoup, Tag
 
-from app.servicos.extracao_sites.web_scraping_bs4 import WebScrapingBs4
+from app.src.servicos.extracao_sites.web_scraping_bs4 import WebScrapingBs4
 
 
 class WebScrapingRss(WebScrapingBs4):
@@ -12,7 +12,7 @@ class WebScrapingRss(WebScrapingBs4):
         super().__init__(parser='xml')
         self.__formatado_data_entrada = "%a, %d %b %Y %H:%M:%S %z"
 
-    def obter_dados(self, dados: BeautifulSoup) -> Generator[Dict[str, Any], None, None]:
+    def obter_dados(self, dados: BeautifulSoup) -> Generator[dict[str, str | datetime], None, None]:
         for noticia in dados.find_all('item'):
             if not isinstance(noticia, Tag):
                 continue

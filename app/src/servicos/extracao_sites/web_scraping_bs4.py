@@ -1,16 +1,20 @@
-from abc import abstractmethod
-from typing import Union, List, Optional, Generator, Dict, Any
+from abc import abstractmethod, ABC
+from typing import Optional, TypeVar, Generic
 
 import requests
 from bs4 import BeautifulSoup
 from requests.exceptions import HTTPError, ConnectionError, ConnectTimeout, ReadTimeout, TooManyRedirects, \
     RequestException
 
+from app.src.servicos.extracao_sites.i_web_scraping import IWebScraping
 
-class WebScrapingBs4:
+SAIDA = TypeVar("SAIDA")
+
+
+class WebScrapingBs4(ABC, Generic[SAIDA], IWebScraping[BeautifulSoup, SAIDA]):
 
     def __init__(self, parser: str):
-        self._url = None
+        self._url: Optional[str] = None
         self._parser_html = parser
 
     @property
@@ -18,7 +22,7 @@ class WebScrapingBs4:
         return self._url
 
     @url.setter
-    def url(self, url: Union[str, List[str]]):
+    def url(self, url: str) -> None:
         self._url = url
 
     def obter_motor(self) -> Optional[BeautifulSoup]:
@@ -61,10 +65,8 @@ class WebScrapingBs4:
             return None
 
     @abstractmethod
-    def obter_dados(self, dados: BeautifulSoup) -> Generator[Dict[str, Any], None, None]:
+    def obter_dados(self, dados: BeautifulSoup) -> SAIDA:
         """
-        Método para obter os dados de um site
-        :param dados:
-        :return:
+        Método para obter os dados do site
         """
         pass

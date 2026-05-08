@@ -3,9 +3,9 @@ from datetime import datetime
 
 from bs4 import BeautifulSoup
 
-from app.servicos.extracao_sites.web_scraping_bs4 import WebScrapingBs4
-from modelo.noticia import Noticia
-from servicos.tratamento.tratamento import Tratamento
+from app.src.modelo.noticia import Noticia
+from app.src.servicos.extracao_sites.web_scraping_bs4 import WebScrapingBs4
+from app.src.servicos.tratamento.tratamento import Tratamento
 
 
 class WebScrapingG1(WebScrapingBs4):

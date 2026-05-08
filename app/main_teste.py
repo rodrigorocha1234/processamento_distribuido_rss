@@ -1,37 +1,30 @@
-from app.servicos.extracao_sites.i_web_scraping import IWebScraping
-from app.servicos.extracao_sites.web_scraping_rss import WebScrapingRss
-from app.servicos.tratamento.tratamento import Tratamento
+from bs4 import BeautifulSoup
 
-
-class MainTeste:
-
-    def __init__(self, url_rss: str, servico_web: IWebScraping
-
-    ):
-
-        self.__servico_web = servico_web
-        self.__url_rss = url_rss
-        self.__servico_web.url = self.__url_rss
-        self.__tratamento = Tratamento()
-
-
-    def rodar_teste(self) -> None:
-
-        motor = self.__servico_web.obter_motor()
-
-        if motor is None:
-            print("Erro ao obter HTML")
-            return
-
-        url_noticias = self.__servico_web.obter_dados(motor)
-
-        for url in url_noticias:
-            print(url)
-            break
-
+from src.servicos.extracao_sites.web_scraping_g1 import WebScrapingG1
+from src.servicos.extracao_sites.web_scraping_rss import WebScrapingRss
 
 web_scraping_rss = WebScrapingRss()
+web_scraping_g1 = WebScrapingG1()
+# servico_arquivo = ArquivoDOCX()
 
-m = MainTeste(url_rss="https://g1.globo.com/rss/g1/sp/ribeirao-preto-franca/", servico_web=web_scraping_rss)
 
-m.rodar_teste()
+web_scraping_rss.url = 'https://g1.globo.com/rss/g1/sp/ribeirao-preto-franca/'
+motor = web_scraping_rss.obter_motor()
+if isinstance(motor, BeautifulSoup):
+    resultados = web_scraping_rss.obter_dados(dados=motor)
+
+    for link in resultados:
+
+        web_scraping_g1 = WebScrapingG1()
+        web_scraping_g1.url = link['url_rss']
+        motor_g1 = web_scraping_g1.obter_motor()
+        if isinstance(motor_g1, BeautifulSoup):
+            noticia_g1 = web_scraping_g1.obter_dados(dados=motor_g1)
+            if noticia_g1.texto:
+                print(link)
+                print(noticia_g1)
+
+
+
+        print()
+
