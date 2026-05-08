@@ -12,7 +12,9 @@ class ArquivoDOCX(Arquivo):
 
     def __init__(self, noticia: Noticia) -> None:
         super().__init__(noticia=noticia)
-        os.makedirs(os.path.join('noticias'), exist_ok=True)
+        print(self.nome_arquivo)
+        #
+        #
 
         self.__documento = Document()
 
@@ -88,6 +90,7 @@ class ArquivoDOCX(Arquivo):
         self._formatar_autor_data()
         self._formatar_texto()
         print(self.nome_arquivo)
+        os.makedirs(os.path.join(self.nome_arquivo.split('/')[0], self.nome_arquivo.split('/')[1]), exist_ok=True)
         self.__documento.save(self.nome_arquivo)
 
     def __call__(self):
