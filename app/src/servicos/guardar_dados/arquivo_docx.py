@@ -1,3 +1,5 @@
+import os
+
 from app.src.modelo.noticia import Noticia
 from app.src.servicos.guardar_dados.arquivo import Arquivo
 from docx import Document
@@ -6,11 +8,11 @@ from docx.shared import RGBColor, Pt
 
 
 
-
 class ArquivoDOCX(Arquivo):
 
     def __init__(self, noticia: Noticia) -> None:
         super().__init__(noticia=noticia)
+        os.makedirs(os.path.join('noticias'), exist_ok=True)
 
         self.__documento = Document()
 
@@ -23,7 +25,7 @@ class ArquivoDOCX(Arquivo):
         titulo = self.__documento.add_heading(self.noticia.titulo, level=1)
         titulo.alignment = WD_ALIGN_PARAGRAPH.CENTER
         for run in titulo.runs:
-            run.font.color.rgb = RGBColor(255, 255, 255)
+            run.font.color.rgb = RGBColor(0, 0, 0)
             run.font.size = Pt(24)
             run.font.bold = True
 
@@ -36,7 +38,7 @@ class ArquivoDOCX(Arquivo):
         subtitulo = self.__documento.add_heading(self.noticia.subtitulo, level=2)
         subtitulo.alignment = WD_ALIGN_PARAGRAPH.LEFT
         for run in subtitulo.runs:
-            run.font.color.rgb = RGBColor(255, 255, 255)
+            run.font.color.rgb = RGBColor(0,0,0)
             run.font.size = Pt(16)
             run.font.italic = True
 
@@ -58,7 +60,7 @@ class ArquivoDOCX(Arquivo):
         p_meta.alignment = WD_ALIGN_PARAGRAPH.CENTER
         for run in p_meta.runs:
             run.font.size = Pt(10)
-            run.font.color.rgb = RGBColor(255, 255, 255)
+            run.font.color.rgb = RGBColor(0, 0, 0)
 
     def _formatar_texto(self):
         """
@@ -70,7 +72,7 @@ class ArquivoDOCX(Arquivo):
         p_texto = self.__documento.add_paragraph(texto)
         p_texto.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
         for run in p_texto.runs:
-            run.font.color.rgb = RGBColor(255, 255, 255)
+            run.font.color.rgb = RGBColor(0, 0, 0)
             run.font.size = Pt(12)
         self.__documento.add_paragraph('')
 
@@ -85,6 +87,7 @@ class ArquivoDOCX(Arquivo):
         self._formatar_subtitulo()
         self._formatar_autor_data()
         self._formatar_texto()
+        print(self.nome_arquivo)
         self.__documento.save(self.nome_arquivo)
 
     def __call__(self):

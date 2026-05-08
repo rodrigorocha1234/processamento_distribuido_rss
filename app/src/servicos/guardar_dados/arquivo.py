@@ -11,6 +11,7 @@ class Arquivo(ABC):
         self._nome_arquivo: str = ""
         self._noticia: Noticia = noticia
 
+
     @property
     def nome_arquivo(self) -> str:
         return self._nome_arquivo
