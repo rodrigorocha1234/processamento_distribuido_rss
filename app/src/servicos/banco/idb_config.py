@@ -1,10 +1,10 @@
 from abc import ABC, abstractmethod
-from typing import Generic, TypeVar, Dict
+from typing import Generic, TypeVar, Dict, Protocol
 
 DRIVER = TypeVar('DRIVER')
 
 
-class IdbConfig(ABC, Generic[DRIVER]):
+class IdbConfig(Protocol[DRIVER]):
 
     @abstractmethod
     def obter_driver(self) -> DRIVER:
