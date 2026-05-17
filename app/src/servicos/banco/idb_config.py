@@ -1,7 +1,7 @@
-from abc import ABC, abstractmethod
-from typing import Generic, TypeVar, Dict, Protocol
+from abc import abstractmethod
+from typing import TypeVar, Dict, Protocol
 
-DRIVER = TypeVar('DRIVER')
+DRIVER = TypeVar('DRIVER', covariant=True)
 
 
 class IdbConfig(Protocol[DRIVER]):
