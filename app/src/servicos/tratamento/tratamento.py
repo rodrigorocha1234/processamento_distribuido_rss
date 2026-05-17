@@ -26,10 +26,33 @@ class Tratamento:
                 texto_extraido = (elemento.text or '').strip()
                 lista_texto.append(texto_extraido)
 
-        padroes_a_remover = [r'✅\s*Clique aqui para seguir o canal do g1 Ribeirão e Franca no WhatsApp',
-            r'Veja mais notícias da região no g1 Ribeirão Preto e Franca',
-            r'VÍDEOS: Tudo sobre Ribeirão Preto, Franca e região',
-            r'Veja mais notícias da região no g1 Ribeirão e Franca', r'LEIA\s+TAMBÉM:?'
+        padroes_a_remover = [
+            # LEIA TAMBÉM
+                r"\bLEIA\s+TAMB[ÉE]M\s*:?",
+
+                # WhatsApp (Ribeirão e Franca)
+                r"(?:✅\s*)?"
+                r"(?:Clique\s+)?aqui\s+para\s+seguir\s+o\s+canal\s+do\s+g1\s+"
+                r"Ribeir[aã]o(?:\s+Preto)?\s+e\s+Franca\s+no\s+WhatsApp\.?",
+
+                # WhatsApp (Pará)
+                r"(?:✅\s*)?"
+                r"(?:Clique\s+)?aqui\s+para\s+seguir\s+o\s+canal\s+do\s+g1\s+"
+                r"Par[aá]\s+no\s+WhatsApp\.?",
+
+                # Forma abreviada: "Siga o canal..."
+                r"(?:✅\s*)?"
+                r"Siga\s+o\s+canal\s+do\s+g1\s+"
+                r"(?:Par[aá]|Ribeir[aã]o(?:\s+Preto)?\s+e\s+Franca)"
+                r"\s+no\s+WhatsApp\.?",
+
+                # Veja mais notícias...
+                r"Veja\s+mais\s+not[ií]cias\s+da\s+regi[aã]o\s+no\s+g1\s+"
+                r"Ribeir[aã]o(?:\s+Preto)?\s+e\s+Franca\.?",
+
+                # VÍDEOS:
+                r"V[ÍI]DEOS\s*:\s*Tudo\s+sobre\s+Ribeir[aã]o\s+Preto,\s*"
+                r"Franca\s+e\s+regi[aã]o\.?",
 
         ]
 
