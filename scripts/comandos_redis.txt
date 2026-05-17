@@ -1,0 +1,160 @@
+Sim. O comando SADD permite adicionar um ou mais valores
+em uma única chave, mas não permite adicionar valores em
+duas chaves diferentes no mesmo comando.
+
+1. Sintaxe do SADD
+SADD chave valor1 valor2 valor3
+
+Exemplo:
+
+SADD g1rss:feeds feed1 feed2 feed3
+2. O Que Não É Permitido
+
+O comando abaixo é inválido:
+
+SADD sucesso:g1rss:news falha:g1rss:news 7bd0e1
+
+O Redis interpretará assim:
+
+chave = sucesso:g1rss:news
+valores = falha:g1rss:news, 7bd0e1
+
+Ou seja, falha:g1rss:news será tratado como um valor do conjunto, não como outra chave.
+
+3. Forma Correta
+
+Se quiser adicionar o mesmo valor em duas chaves, execute dois comandos:
+
+SADD sucesso:g1rss:news 7bd0e1
+SADD falha:g1rss:news 7bd0e1
+4. Execução Atômica com MULTI
+
+Se desejar que ambos os comandos sejam executados juntos:
+
+MULTI
+SADD sucesso:g1rss:news 7bd0e1
+SADD falha:g1rss:news 7bd0e1
+EXEC
+5. Uso Típico no Projeto
+Índice de sucessos
+SADD g1rss:success:index 7bd0e1
+Índice de falhas
+SADD g1rss:failed:index 7bd0e1
+6. Adicionar Vários IDs em Uma Mesma Chave
+SADD g1rss:success:index 7bd0e1 9ac234 fff222
+7. Resposta Objetiva
+✅ Pode adicionar vários valores em uma única chave.
+❌ Não pode atualizar duas chaves no mesmo SADD.
+✅ Para duas chaves, use dois SADD.
+✅ Se quiser atomicidade, use MULTI ... EXEC.
+E múltiplas chaves?
+
+Não. O comando SADD aceita apenas uma chave por execução.
+
+Sintaxe Oficial
+SADD chave membro1 membro2 membro3
+chave: somente uma.
+membro1 ... membroN: um ou mais valores.
+Exemplo Válido
+SADD g1rss:success:index 7bd0e1 9ac234 abcd99
+Exemplo Inválido (conceitualmente)
+SADD chave1 chave2 valor
+
+O Redis interpretará:
+
+chave = chave1
+membros = chave2, valor
+
+Ou seja, chave2 será apenas um membro do conjunto.
+
+Como Atualizar Múltiplas Chaves
+
+Use vários comandos:
+
+SADD g1rss:success:index 7bd0e1
+SADD g1rss:processed:urls 7bd0e1
+SADD g1rss:feed:4c2fa9:news 7bd0e1
+Execução Atômica com MULTI
+MULTI
+SADD g1rss:success:index 7bd0e1
+SADD g1rss:processed:urls 7bd0e1
+SADD g1rss:feed:4c2fa9:news 7bd0e1
+EXEC
+Exemplo no Seu Projeto
+
+Ao concluir uma notícia com sucesso, é comum atualizar vários índices:
+
+MULTI
+HSET g1rss:success:news:7bd0e1 \
+  url_g1 "https://g1.globo.com/..." \
+  data_hora_sucesso "2026-05-08T21:45:32"
+
+SADD g1rss:success:index 7bd0e1
+SADD g1rss:processed:urls 7bd0e1
+SADD g1rss:feed:4c2fa9:news 7bd0e1
+EXEC
+Resumo
+Situação	Permitido
+Uma chave e vários membros	✅
+Várias chaves em um único SADD	❌
+Várias chaves com múltiplos SADD	✅
+Vários SADD em transação MULTI/EXEC	✅
+Resposta Objetiva
+
+Não é possível usar múltiplas chaves em um único comando SADD.
+
+Para atualizar várias chaves, execute vários comandos SADD, opcionalmente dentro de uma transação MULTI ... EXEC.
+
+HGETALL g1rss:news:7bd0e1 url_g1
+"ERR wrong number of arguments for 'hgetall' command"
+
+
+HGETALL não aceita o nome de um campo. Ele retorna todos os campos e valores de um HASH.
+
+Forma Correta com HGETALL
+HGETALL g1rss:news:7bd0e1
+
+Retorna todos os campos:
+
+url_g1
+https://g1.globo.com/politica/noticia-exemplo.ghtml
+titulo
+Exemplo de notícia
+status
+COMPLETED
+data_hora_sucesso
+2026-05-08T21:45:32
+Para Obter Apenas um Campo
+
+Use HGET:
+
+HGET g1rss:news:7bd0e1 url_g1
+
+Resultado:
+
+https://g1.globo.com/politica/noticia-exemplo.ghtml
+Para Obter Vários Campos Específicos
+
+Use HMGET:
+
+HMGET g1rss:news:7bd0e1 url_g1 status data_hora_sucesso
+
+Resultado:
+
+1) "https://g1.globo.com/politica/noticia-exemplo.ghtml"
+2) "COMPLETED"
+3) "2026-05-08T21:45:32"
+Resumo dos Comandos
+Comando	Finalidade
+HGETALL chave	Retorna todos os campos e valores
+HGET chave campo	Retorna um único campo
+HMGET chave campo1 campo2 ...	Retorna vários campos
+Seu Caso
+
+Para obter apenas a URL do G1:
+
+HGET g1rss:news:7bd0e1 url_g1
+
+Para obter todos os dados:
+
+HGETALL g1rss:news:7bd0e1
