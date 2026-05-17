@@ -1,0 +1,90 @@
+SET ultimo_usuario_logado "Tony Stark"
+GET ultimo_usuario_logado
+DEL ultimo_usuario_logado
+SET resultado:megasena "2, 13, 24, 41, 42, 44"
+
+MSET \
+  resultado:04-09-2013:megasena "10, 11, 18, 42, 55, 56" \
+  resultado:07-09-2013:megasena "2, 21, 30, 35, 45, 50" \
+  resultado:21-09-2013:megasena "2, 13, 24, 41, 42, 44" \
+  resultado:02-10-2013:megasena "7, 15, 20, 23, 30, 41"
+
+KEYS resultado:0?-*-*:megasena
+
+KEYS resultado:*-10-2013:megasena
+
+
+# 1) Obter os valores de várias chaves de uma única vez
+MGET \
+  resultado:04-09-2013:megasena \
+  resultado:07-09-2013:megasena \
+  resultado:21-09-2013:megasena \
+  resultado:02-10-2013:megasena
+
+# 2) Descobrir o tamanho do valor da chave "resultado_megasena"
+STRLEN resultado_megasena
+
+# 3) Obter os dois primeiros números ("2, 13")
+# Valor: "2, 13, 24, 41, 42, 44"
+# Índices: 0..4 => "2, 13"
+GETRANGE resultado_megasena 0 4
+
+
+HSET resultado:09-11-2013:megasena ganhadores "22"
+HSET resultado:09-11-2013:megasena numeros "8, 18, 26, 42, 56, 58"
+
+HMSET sessao:usuario:1962 codigo 1962 nome "Peter Parker" email "spidey@marvel.com"
+
+EXPIRE sessao:usuario:1962 1800
+
+
+==========================================
+INCR "pagina:/inicio:02/09/2013"
+# Resultado: 1
+
+INCR "pagina:/contato:02/09/2013"
+# Resultado: 1
+
+INCR "pagina:/sobre-mim:02/09/2013"
+# Resultado: 1
+
+INCR "pagina:/contato:02/09/2013"
+# Resultado: 2
+
+INCR "pagina:/contato:02/09/2013"
+# Resultado: 3
+
+
+GET "pagina:/inicio:02/09/2013"
+# 1
+
+GET "pagina:/contato:02/09/2013"
+# 3
+
+GET "pagina:/sobre-mim:02/09/2013"
+# 1
+
+
+
+KEYS "pagina:*:02/09/2013"
+
+1) "pagina:/inicio:02/09/2013"
+2) "pagina:/contato:02/09/2013"
+3) "pagina:/sobre-mim:02/09/2013"
+
+SETBIT cliques:anuncio:CASADOCODIGO 1000 1
+SETBIT cliques:anuncio:CASADOCODIGO 1001 1
+
+SETBIT cliques:anuncio:CASADOCODIGO 1002 1
+
+BITOP AND acessos_dias_01_e_02 acesso:01/01/2014
+acesso:02/01/2014
+
+LPUSH ultimas_paginas_visitadas \
+  "/inicio" \
+  "/contato" \
+  "/sobre-mim" \
+  "/todos-os-posts" \
+  "/armazenando-dados-no-redis"
+
+  CAP 5
